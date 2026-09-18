@@ -212,8 +212,43 @@ plot_aggregate_contributions <- function(diag, q = 7,
        xlab = "Index", main = main)
   abline(h = vc, lty = 2, col = "red")
   ord <- order(Bj_q, decreasing = TRUE)[seq_len(label.flagged)]
-  text(ord, Bj_q[ord], labels = ord, pos = 3, cex = 0.85, col = "blue")
+  ypos <- .declutter_above(ord, Bj_q[ord], n = n,
+                            step = max(Bj_q, vc) * 0.05)
+  text(ord, ypos, labels = ord, cex = 0.85, col = "blue")
   invisible(ord)
+}
+
+#' Vertical offsets that keep index labels from overlapping
+#'
+#' Flagged observations that are close together on the index axis (as
+#' happens, e.g., with two adjacent months, or several early cases in a
+#' short series) receive text labels that collide when placed at a fixed
+#' height above each point. This helper staggers the height of labels
+#' whose x-position falls within the closeness threshold of the previous
+#' one (in sorted order, so a chain of nearby points all stack rather
+#' than only immediate pairs), so that close-together labels stack
+#' instead of overlapping; isolated points keep the original spacing.
+#'
+#' @param x Integer index positions of the labelled points.
+#' @param y Their heights on the plotted quantity.
+#' @param n Sample size, used to scale the closeness threshold.
+#' @param step Vertical spacing added per stacked label.
+#' @return Numeric vector of y-coordinates to pass to \code{text()}.
+#' @noRd
+.declutter_above <- function(x, y, n, step) {
+  o <- order(x)
+  gap <- 0
+  level <- integer(length(x))
+  thresh <- max(3, 0.06 * n)
+  for (i in seq_along(o)) {
+    if (i > 1 && (x[o[i]] - x[o[i - 1]]) < thresh) {
+      gap <- gap + 1
+    } else {
+      gap <- 0
+    }
+    level[o[i]] <- gap
+  }
+  y + step * (1 + level)
 }
 
 

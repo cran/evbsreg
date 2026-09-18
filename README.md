@@ -18,14 +18,22 @@ This package implements the methodology of:
 It provides joint maximum likelihood estimation, conformal normal curvature
 (CNC) diagnostics under three perturbation schemes, randomized quantile
 residuals with simulation envelope, Monte Carlo utilities, and
-publication-quality density and diagnostic plots.
+publication-quality density and diagnostic plots. Since 1.1.0 it also
+provides the full EVBS distribution family (density, distribution, quantile),
+the finite upper endpoint and return levels, moving-block bootstrap standard
+errors, and the corresponding local influence diagnostics for the
+generalized extreme-value (GEV) regression model, used throughout as a
+benchmark. Since 1.2.0 it provides `evbs_monitor()`, a prospective control
+chart that combines the curvature diagnostic with the finite upper endpoint
+into an index of endpoint identifiability with a natural control limit. See
+`NEWS.md` for the full changelog.
 
 ## Installation
 
 From a local source tarball:
 
 ```r
-install.packages("evbsreg_1.0.0.tar.gz", repos = NULL, type = "source")
+install.packages("evbsreg_1.2.0.tar.gz", repos = NULL, type = "source")
 ```
 
 Or from GitHub:
@@ -36,7 +44,8 @@ remotes::install_github("Raydonal/evbsreg")
 ```
 
 Dependencies: `SpatialExtremes` (GEV random number generation) and
-`ggplot2` (density plots).
+`ggplot2` (density plots). `gamlss` is needed only to fit the optional
+`logEVBS()` family with the `gamlss` package itself.
 
 ## Quick start
 
@@ -74,9 +83,15 @@ structure remains stable.
 | `plot_cnc()` | Two-panel diagnostic figure (eigenvalues + contributions) |
 | `rqrandomized()`, `rcoxsnell()` | Quantile and Cox–Snell residuals |
 | `envelope_qq()` | Normal probability plot with simulation envelope |
-| `revbs()` | EVBS random number generation |
+| `revbs()`, `devbs()`, `pevbs()`, `qevbs()` | EVBS density, distribution, quantile, and random generation |
+| `evbs_endpoint()` | Finite upper endpoint of the fitted model (Weibull domain) |
+| `evbs_return_level()` | Return levels and expected shortfall from the EVBS quantile function |
+| `evbs_block_boot()` | Moving-block bootstrap standard errors for serially dependent series |
 | `evbsreg.fit.mc()` | Monte Carlo simulation study |
 | `plot_evbs_alpha()` … | Density plots (Figures 1–2 of the paper) |
+| `gevreg.fit()`, `gev_scores()`, `cnc_diagnostics_gev()` | GEV regression fit and matching local influence diagnostics |
+| `logEVBS()`, `dlogEVBS()`, `plogEVBS()`, `qlogEVBS()` | `gamlss.family` for a log-EVBS model with covariate-dependent shape |
+| `evbs_monitor()`, `plot.evbs_monitor()` | Prospective endpoint-identifiability control chart |
 
 See `vignette("evbsreg")` for the full worked example.
 
