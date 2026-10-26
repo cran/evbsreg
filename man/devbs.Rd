@@ -26,10 +26,12 @@ Probability density function of the EVBS distribution on the response
 \eqn{Z = (2/\alpha)\,\sinh\{(\log T - \eta)/2\} \sim \mathrm{GEV}(0,1,\gamma)}.
 }
 \details{
-The extreme-value index of the \emph{response} \eqn{T} is
-\eqn{2\gamma}, not \eqn{\gamma}. The transformation preserves the
-max-domain of attraction but doubles the tail index, because
-\eqn{T \approx \beta\alpha^2 Z^2} in the upper tail.
+The response \eqn{T} lies in the same max-domain of attraction as the
+GEV variate. Its extreme-value index is \eqn{2\gamma} when \eqn{\gamma > 0},
+because \eqn{T \approx \beta\alpha^2 Z^2} in the upper tail, and
+\eqn{\gamma} itself when \eqn{\gamma \le 0}: near a finite endpoint the
+transformation is locally linear (Ferreira, Gomes and Leiva, 2012,
+Theorems 4.1 and 4.2).
 }
 \examples{
 devbs(c(10, 20, 30), eta = 2.58, alpha = 0.19, gama = -0.16)

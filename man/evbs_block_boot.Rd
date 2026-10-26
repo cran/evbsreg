@@ -28,6 +28,7 @@ independence assumption are optimistic.
 \examples{
 \donttest{
 data(itajai)
+set.seed(2023)  # the resampled blocks are random
 evbs_block_boot(cbind(1, itajai$pressure), itajai$wind, L = 4, B = 100)$se
 }
 }

@@ -25,6 +25,16 @@ Computes the \code{period}-observation return level and, optionally, the
 conditional tail expectation (expected shortfall) at a given linear
 predictor value.
 }
+\details{
+The return level is the quantile of order \eqn{1 - 1/\code{period}} of the
+fitted \emph{conditional} distribution of one observation at covariate
+value \code{x}: it is exceeded on average once in \code{period}
+observations with that covariate value, not a return level of the marginal
+distribution. With monthly maxima, \code{period = 12 * T} gives the level
+exceeded once in \eqn{12T} months; reading it as the \eqn{T}-year level of
+the annual maximum assumes the monthly maxima of a year are independent.
+Periods much longer than the record are extrapolations.
+}
 \examples{
 data(itajai)
 fit <- evbsreg.fit(cbind(1, itajai$pressure), itajai$wind)

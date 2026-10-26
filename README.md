@@ -8,43 +8,40 @@
 **Local influence diagnostics for the Extreme-Value Birnbaum–Saunders
 (EVBS) regression model.**
 
-This package implements the methodology of:
-
-> Ospina, R., Lima, J. I. C., Barros, M., and Macêdo, A. M. S. (2026).
-> *Local influence diagnostics for the extreme-value Birnbaum–Saunders
-> regression model: methodology, validation, and application to anomalous
-> wind gusts.* Submitted.
-
 It provides joint maximum likelihood estimation, conformal normal curvature
 (CNC) diagnostics under three perturbation schemes, randomized quantile
-residuals with simulation envelope, Monte Carlo utilities, and
-publication-quality density and diagnostic plots. Since 1.1.0 it also
-provides the full EVBS distribution family (density, distribution, quantile),
-the finite upper endpoint and return levels, moving-block bootstrap standard
-errors, and the corresponding local influence diagnostics for the
-generalized extreme-value (GEV) regression model, used throughout as a
-benchmark. Since 1.2.0 it provides `evbs_monitor()`, a prospective control
-chart that combines the curvature diagnostic with the finite upper endpoint
-into an index of endpoint identifiability with a natural control limit. See
-`NEWS.md` for the full changelog.
+residuals with simulation envelope, the EVBS distribution family (density,
+distribution, quantile), the finite upper endpoint, return levels and
+expected shortfall, moving-block bootstrap standard errors, and the same
+local influence diagnostics for the generalized extreme-value (GEV)
+regression model, used as a benchmark. `evbs_monitor()` combines the
+curvature diagnostic with the finite upper endpoint into a prospective index
+of endpoint identifiability with a natural control limit. See `NEWS.md` for
+the changelog and the vignette for a reproducible walk-through.
+
+The methodology is described in
+
+> Ospina, R., Lima, J. I. C., Barros, M., and Macêdo, A. M. S. (2026).
+> *Local influence diagnostics for extreme-value Birnbaum–Saunders
+> regression, with an application to wind-gust extremes.* Submitted.
+> Preliminary version: [arXiv:2507.22967](https://arxiv.org/abs/2507.22967).
 
 ## Installation
 
-From a local source tarball:
+From CRAN:
 
 ```r
-install.packages("evbsreg_1.2.0.tar.gz", repos = NULL, type = "source")
+install.packages("evbsreg")
 ```
 
-Or from GitHub:
+Or the development version from GitHub:
 
 ```r
 # install.packages("remotes")
 remotes::install_github("Raydonal/evbsreg")
 ```
 
-Dependencies: `SpatialExtremes` (GEV random number generation) and
-`ggplot2` (density plots). `gamlss` is needed only to fit the optional
+Dependencies: `ggplot2` (density plots) besides base R. `gamlss` is needed only to fit the optional
 `logEVBS()` family with the `gamlss` package itself.
 
 ## Quick start

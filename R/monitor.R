@@ -11,7 +11,11 @@
 #' the largest response up to \eqn{t}. Then
 #' \deqn{F_t = \hat T^{*}_{(-j^{*}(t))}(t) / y_{\max}(t),}
 #' where \eqn{\hat T^{*}_{(-j^{*})}} is the endpoint estimated after deleting the
-#' flagged observation, evaluated at its covariate value.
+#' flagged observation, evaluated at the covariate value of the observation
+#' that attains \eqn{y_{\max}(t)}, so that numerator and denominator refer to
+#' the same covariate value. The flagged observation is the one with the
+#' largest mean aggregate contribution, \code{colMeans(cnc_diagnostics(fit)$Bj)}.
+#' See \code{\link{gev_monitor}} for the same index under the GEV regression.
 #'
 #' Values below one indicate that the model fitted without the flagged
 #' observation assigns probability zero to a value that was in fact observed: the
@@ -34,7 +38,8 @@
 #' \donttest{
 #' data(itajai)
 #' ct <- evbs_monitor(cbind(1, itajai$pressure), itajai$wind, burn = 40)
-#' plot(ct$t, ct$F, type = "l"); abline(h = 1, lty = 2)
+#' ct[ct$F < 1, ]  # instants with an alarm
+#' plot(ct)
 #' }
 #' @export
 evbs_monitor <- function(X, y, burn = 40, use = c("curvature", "max")) {

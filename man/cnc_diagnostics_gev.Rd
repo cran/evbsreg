@@ -10,8 +10,13 @@ cnc_diagnostics_gev(object)
 \item{object}{An object of class \code{gevreg} from \code{\link{gevreg.fit}}.}
 }
 \value{
-A list with the normalized aggregate contributions \code{Bj}, the
-  threshold \code{2/n}, and the indices of the flagged observations.
+A list with \code{Bj}, the diagonal of the influence matrix
+  normalised to sum to one, the threshold \code{2/n}, the indices of the
+  observations with \code{Bj} above it, and \code{Bbar}, the mean aggregate
+  contribution over the thresholds \eqn{q = 1, \ldots, 7} and the
+  unthresholded contribution, computed exactly as
+  \code{colMeans(cnc_diagnostics(fit)$Bj)} is for the EVBS model. Use
+  \code{Bbar} when comparing influence rankings with the EVBS fit.
 }
 \description{
 Local influence diagnostics under case-weight perturbation for the GEV

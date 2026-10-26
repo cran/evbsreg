@@ -118,8 +118,13 @@ gevreg.fit <- function(X, y, xi_start = c(-0.2, -0.05, 0.05, 0.2)) {
 #'
 #' @param object An object of class \code{gevreg} from \code{\link{gevreg.fit}}.
 #'
-#' @return A list with the normalized aggregate contributions \code{Bj}, the
-#'   threshold \code{2/n}, and the indices of the flagged observations.
+#' @return A list with \code{Bj}, the diagonal of the influence matrix
+#'   normalised to sum to one, the threshold \code{2/n}, the indices of the
+#'   observations with \code{Bj} above it, and \code{Bbar}, the mean aggregate
+#'   contribution over the thresholds \eqn{q = 1, \ldots, 7} and the
+#'   unthresholded contribution, computed exactly as
+#'   \code{colMeans(cnc_diagnostics(fit)$Bj)} is for the EVBS model. Use
+#'   \code{Bbar} when comparing influence rankings with the EVBS fit.
 #' @examples
 #' data(itajai)
 #' X <- cbind(1, itajai$pressure - mean(itajai$pressure))
@@ -140,5 +145,74 @@ cnc_diagnostics_gev <- function(object) {
   dF <- abs(diag(Fmat))
   Bj <- dF / sum(dF)
   thr <- 2 / n
-  list(Bj = Bj, threshold = thr, flagged = which(Bj > thr), n = n)
+  list(Bj = Bj, threshold = thr, flagged = which(Bj > thr), n = n,
+       Bbar = .mean_aggregate(Fmat))
+}
+
+## Mean aggregate contribution: average of B_j(q), q = 1..7, and of the
+## unthresholded contribution, as in cnc_diagnostics() for the EVBS model.
+.mean_aggregate <- function(Fmat) {
+  n <- nrow(Fmat)
+  ev <- eigen((Fmat + t(Fmat)) / 2, symmetric = TRUE)
+  ls <- abs(ev$values) / sqrt(sum(ev$values^2))
+  A2 <- ev$vectors^2
+  Bq <- vapply(1:7, function(q) as.vector(A2 %*% ifelse(ls > q / sqrt(n), ls, 0)),
+               numeric(n))
+  rowMeans(cbind(Bq, as.vector(A2 %*% ls)))
+}
+
+#' Prospective endpoint-identifiability index under the GEV regression
+#'
+#' The index \eqn{F_t} of \code{\link{evbs_monitor}}, computed with the GEV
+#' regression of \code{\link{gevreg.fit}} in place of the EVBS model. At each
+#' \eqn{t \ge} \code{burn} the model is fitted to the first \eqn{t} records,
+#' the observation with the largest mean aggregate contribution
+#' (\code{cnc_diagnostics_gev(fit)$Bbar}) is deleted, the model is refitted,
+#' and the endpoint \eqn{\mu(x) - \sigma/\xi} of the refit, evaluated at the
+#' covariate value of the running maximum, is divided by the running maximum.
+#' The endpoint is infinite, and so is the index, when the refitted
+#' \eqn{\xi} is not negative.
+#'
+#' @inheritParams evbs_monitor
+#' @param X Design matrix (including the intercept column). Centre the
+#'   covariates: the GEV likelihood is poorly conditioned otherwise.
+#'
+#' @return A data frame of class \code{evbs_monitor} with the time index, the
+#'   running maximum, the flagged observation, the fitted shape parameter
+#'   \code{xi}, the endpoint and the index \code{F}. Instants at which a fit
+#'   fails or does not converge are omitted.
+#' @examples
+#' \donttest{
+#' data(itajai)
+#' X <- cbind(1, itajai$pressure - mean(itajai$pressure))
+#' gt <- gev_monitor(X, itajai$wind, burn = 40)
+#' plot(gt)
+#' }
+#' @export
+gev_monitor <- function(X, y, burn = 40, use = c("curvature", "max")) {
+  use <- match.arg(use)
+  X <- as.matrix(X); n <- length(y)
+  stopifnot(burn >= ncol(X) + 2, burn < n)
+  out <- NULL
+  for (t in burn:n) {
+    yt <- y[seq_len(t)]; Xt <- X[seq_len(t), , drop = FALSE]
+    jm <- which.max(yt)
+    f <- try(gevreg.fit(Xt, yt), silent = TRUE)
+    if (inherits(f, "try-error") || f$convergence != 0) next
+    if (use == "curvature") {
+      B <- try(cnc_diagnostics_gev(f)$Bbar, silent = TRUE)
+      if (inherits(B, "try-error")) next
+      j <- which.max(B)
+    } else {
+      j <- jm
+    }
+    fj <- try(gevreg.fit(Xt[-j, , drop = FALSE], yt[-j]), silent = TRUE)
+    if (inherits(fj, "try-error") || fj$convergence != 0) next
+    ep <- if (fj$xi < 0) sum(Xt[jm, ] * fj$beta) - fj$sigma / fj$xi else Inf
+    out <- rbind(out, data.frame(
+      t = t, ymax = max(yt), flagged = j, xi = f$xi,
+      endpoint = ep, F = ep / max(yt)
+    ))
+  }
+  structure(out, class = c("evbs_monitor", "data.frame"), use = use)
 }

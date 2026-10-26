@@ -1,20 +1,32 @@
 citHeader("To cite evbsreg in publications use:")
 
 bibentry(
-  bibtype = "Article",
-  title   = paste("Local influence diagnostics for the extreme-value",
-                   "Birnbaum-Saunders regression model:",
-                   "methodology, validation, and application to anomalous wind gusts"),
+  bibtype = "Unpublished",
+  title   = paste("Local influence diagnostics for extreme-value",
+                  "Birnbaum-Saunders regression, with an application to",
+                  "wind-gust extremes"),
   author  = c(person("Raydonal", "Ospina"),
               person(c("Jose", "I.", "C."), "Lima"),
               person("Michelli", "Barros"),
               person(c("Antonio", "M.", "S."), "Macedo")),
-  journal = "Submitted",
   year    = "2026",
+  note    = "Submitted",
   textVersion = paste(
     "Ospina, R., Lima, J. I. C., Barros, M., Macedo, A. M. S. (2026).",
-    "Local influence diagnostics for the extreme-value Birnbaum-Saunders",
-    "regression model: methodology, validation, and application to",
-    "anomalous wind gusts. Submitted."
+    "Local influence diagnostics for extreme-value Birnbaum-Saunders",
+    "regression, with an application to wind-gust extremes. Submitted."
   )
+)
+
+bibentry(
+  bibtype = "Misc",
+  title   = paste("Stability analysis and local influence diagnostics for an",
+                  "extreme-value regression model of anomalous wind gusts"),
+  author  = c(person(c("Jose", "I.", "C."), "Lima"),
+              person("Raydonal", "Ospina"),
+              person("Michelli", "Barros"),
+              person(c("Antonio", "M.", "S."), "Macedo")),
+  year    = "2025",
+  howpublished = "arXiv preprint",
+  doi     = "10.48550/arXiv.2507.22967"
 )

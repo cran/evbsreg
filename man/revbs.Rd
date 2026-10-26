@@ -27,8 +27,11 @@ variates.
 \details{
 If \eqn{Z \sim \mathrm{GEV}(0, 1, \gamma)}, then
 \eqn{T = \beta\{1 + \alpha^2 Z^2/2 + \alpha Z \sqrt{1 + \alpha^2 Z^2/4}\}}
-follows the EVBS distribution. GEV variates are drawn via
-\code{rgev} from the \pkg{SpatialExtremes} package.
+follows the EVBS distribution. GEV variates are drawn by inversion,
+\eqn{Z = (E^{-\gamma} - 1)/\gamma} (or \eqn{Z = -\log E} when
+\eqn{\gamma = 0}) with \eqn{E \sim} Exp(1); for a given seed this
+reproduces exactly the variates of earlier versions, which used
+\code{SpatialExtremes::rgev}.
 }
 \examples{
 set.seed(2023)

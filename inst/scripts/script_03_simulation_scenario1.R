@@ -1,7 +1,7 @@
 ################################################################
 ## script_03_simulation_scenario1.R
 ##
-## Reproduces Tables 4 and 5 of the paper:
+## Reproduces the corresponding simulation tables of the paper (appendix):
 ## Monte Carlo simulation - Scenario 1 (canonical setting).
 ##
 ## Configuration in the paper:
@@ -19,7 +19,7 @@
 library(evbsreg)
 
 m <- 5000               # change to 500 for a quick check
-gama_vals <- c(-0.20, -0.10, 0.10, 0.20)
+gama_vals <- c(-0.20, 0, 0.20)   # as in the paper's tables
 n_vals    <- c(60, 120, 180)
 
 cat(sprintf("Scenario 1 (canonical): m=%d, n=%s, gama=%s\n",

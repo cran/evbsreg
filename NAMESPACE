@@ -15,6 +15,7 @@ export(evbsreg.fit)
 export(evbsreg.fit.mc)
 export(generate_evbs_data)
 export(generate_logevbs_data)
+export(gev_monitor)
 export(gev_scores)
 export(gevreg.fit)
 export(logEVBS)
@@ -33,15 +34,19 @@ export(rcoxsnell)
 export(revbs)
 export(rqrandomized)
 import(ggplot2)
-importFrom(SpatialExtremes,rgev)
-importFrom(graphics,abline)
-importFrom(graphics,par)
-importFrom(graphics,plot)
-importFrom(graphics,text)
-importFrom(stats,lm.fit)
-importFrom(stats,optim)
-importFrom(stats,pnorm)
-importFrom(stats,qnorm)
-importFrom(stats,qqnorm)
-importFrom(stats,rnorm)
-importFrom(stats,runif)
+importFrom(graphics,
+  abline,
+  par,
+  plot,
+  text
+)
+importFrom(stats,
+  lm.fit,
+  optim,
+  pnorm,
+  qnorm,
+  qqnorm,
+  rexp,
+  rnorm,
+  runif
+)

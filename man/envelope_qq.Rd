@@ -29,7 +29,10 @@ indicate poor fit.
 \examples{
 data(itajai)
 X <- cbind(1, itajai$pressure)
-\donttest{envelope_qq(X, itajai$wind, nrep = 100)}
+\donttest{
+set.seed(2023)  # the envelope bands are simulated
+envelope_qq(X, itajai$wind, nrep = 100)
+}
 
 }
 \references{

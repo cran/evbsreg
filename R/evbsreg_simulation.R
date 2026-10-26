@@ -15,8 +15,11 @@
 #' @details
 #' If \eqn{Z \sim \mathrm{GEV}(0, 1, \gamma)}, then
 #' \eqn{T = \beta\{1 + \alpha^2 Z^2/2 + \alpha Z \sqrt{1 + \alpha^2 Z^2/4}\}}
-#' follows the EVBS distribution. GEV variates are drawn via
-#' \code{rgev} from the \pkg{SpatialExtremes} package.
+#' follows the EVBS distribution. GEV variates are drawn by inversion,
+#' \eqn{Z = (E^{-\gamma} - 1)/\gamma} (or \eqn{Z = -\log E} when
+#' \eqn{\gamma = 0}) with \eqn{E \sim} Exp(1); for a given seed this
+#' reproduces exactly the variates of earlier versions, which used
+#' \code{SpatialExtremes::rgev}.
 #'
 #' @references
 #' Ferreira, M., Gomes, M. I., and Leiva, V. (2012). On an extreme value
@@ -30,13 +33,23 @@
 #' x <- revbs(100, alpha = 0.5, beta = 1, gama = 0.2)
 #' summary(x)
 #'
-#' @importFrom SpatialExtremes rgev
 #' @export
 revbs <- function(n, alpha, beta, gama) {
   if (is.na(n)) return(NA)
-  z <- SpatialExtremes::rgev(n, 0, 1, gama)
+  z <- .rgev_std(n, gama)
   beta * (1 + ((alpha^2 * z^2) / 2) +
             alpha * z * sqrt(1 + ((alpha^2 * z^2) / 4)))
+}
+
+
+# Standard GEV(0, 1, shape) variates by inversion of an Exp(1) draw; the same
+# construction as SpatialExtremes::rgev(), so seeded results are unchanged.
+#' @importFrom stats rexp
+#' @noRd
+.rgev_std <- function(n, shape) {
+  if (length(shape) != 1) stop("'gama' should be a scalar")
+  e <- rexp(n)
+  if (shape == 0) -log(e) else (e^(-shape) - 1) / shape
 }
 
 

@@ -11,10 +11,12 @@
 #' @param log Logical; if \code{TRUE}, the log-density is returned.
 #'
 #' @details
-#' The extreme-value index of the \emph{response} \eqn{T} is
-#' \eqn{2\gamma}, not \eqn{\gamma}. The transformation preserves the
-#' max-domain of attraction but doubles the tail index, because
-#' \eqn{T \approx \beta\alpha^2 Z^2} in the upper tail.
+#' The response \eqn{T} lies in the same max-domain of attraction as the
+#' GEV variate. Its extreme-value index is \eqn{2\gamma} when \eqn{\gamma > 0},
+#' because \eqn{T \approx \beta\alpha^2 Z^2} in the upper tail, and
+#' \eqn{\gamma} itself when \eqn{\gamma \le 0}: near a finite endpoint the
+#' transformation is locally linear (Ferreira, Gomes and Leiva, 2012,
+#' Theorems 4.1 and 4.2).
 #'
 #' @return A numeric vector of (log-)density values.
 #' @examples
@@ -123,6 +125,15 @@ evbs_endpoint <- function(eta, alpha, gama) {
 #' Computes the \code{period}-observation return level and, optionally, the
 #' conditional tail expectation (expected shortfall) at a given linear
 #' predictor value.
+#'
+#' The return level is the quantile of order \eqn{1 - 1/\code{period}} of the
+#' fitted \emph{conditional} distribution of one observation at covariate
+#' value \code{x}: it is exceeded on average once in \code{period}
+#' observations with that covariate value, not a return level of the marginal
+#' distribution. With monthly maxima, \code{period = 12 * T} gives the level
+#' exceeded once in \eqn{12T} months; reading it as the \eqn{T}-year level of
+#' the annual maximum assumes the monthly maxima of a year are independent.
+#' Periods much longer than the record are extrapolations.
 #'
 #' @param object An object of class \code{evbsreg} from \code{\link{evbsreg.fit}}.
 #' @param x Covariate vector (including the intercept) at which to evaluate.
